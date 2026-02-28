@@ -1,0 +1,252 @@
+body {
+    background: #000;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.sales-wrapper {
+    padding: 30px;
+}
+
+/* SUMMARY CARDS */
+.summary {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.box {
+    flex: 1;
+    background: #111;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid gold;
+    box-shadow: 0 0 20px rgba(212,175,55,0.3);
+    text-align: center;
+}
+
+.box h4 {
+    color: #d4af37;
+    margin-bottom: 10px;
+}
+
+.box p {
+    font-size: 28px;
+    font-weight: bold;
+    color: #fff;
+}
+
+/* CHARTS */
+.charts-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.chart-box {
+    flex: 1;
+    background: #111;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+/* TABLE */
+.sales-title {
+    color: #d4af37;
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.sales-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #111;
+    overflow: hidden;
+}
+
+.sales-table th {
+    background: #000;
+    color: #d4af37;
+    padding: 12px;
+}
+
+.sales-table td {
+    padding: 12px;
+    border-top: 1px solid rgba(212,175,55,0.2);
+    color: #fff;
+}
+
+.sales-table tr:hover {
+    background: rgba(212,175,55,0.1);
+}
+/* FILTER BAR */
+.filter-bar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.filter-bar select,
+.filter-bar input,
+.filter-bar button {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid gold;
+    background: #ffc400;
+    color: black;
+    font-weight: bold;
+    font-size: 14px;
+    
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+
+    .summary {
+        flex-direction: column;
+    }
+
+    .charts-row {
+        flex-direction: column;
+    }
+
+    .sales-table {
+        font-size: 12px;
+    }
+
+    .sales-table th,
+    .sales-table td {
+        padding: 8px;
+    }
+}
+/* =====================================
+   CLEAN COMPACT PROFESSIONAL PRINT
+===================================== */
+@media print {
+
+    @page {
+        size: A4;
+        margin: 20mm 15mm 15mm 15mm;
+        
+    }
+
+    body {
+        background: #fff !important;
+        font-size: 11px;
+        color: #000;
+    }
+
+    /* Hide everything first */
+    body * {
+        visibility: hidden;
+    }
+
+    /* Show only report */
+    .sales-wrapper,
+    .sales-wrapper * {
+        visibility: visible;
+    }
+
+    /* Remove filters & buttons */
+    .filter-bar,
+    button {
+        display: none !important;
+    }
+
+    /* ================= HEADER LOGO ================= */
+    .sales-wrapper {
+        position: relative;
+    }
+
+    .sales-wrapper::before {
+        content: "";
+        display: block;
+        background: url("images/logo.png") no-repeat center;
+        background-size: 100px;
+        height: 60px;
+        margin-bottom: 10px;
+    }
+
+    /* ================= SUMMARY (1 ROW SMALL) ================= */
+    .summary {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .box {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 5px;
+        text-align: center;
+    }
+
+    .box h4 {
+        font-size: 10px;
+        color: #000;
+        margin-bottom: 3px;
+        font-weight: 600;
+    }
+
+    .box p {
+        font-size: 14px;
+        margin: 0;
+        font-weight: bold;
+        color: #000;
+    }
+
+    /* ================= CHARTS (SIDE BY SIDE SMALL) ================= */
+    .charts-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .chart-box {
+        flex: 1;
+        padding: 5px;
+        background: #fff !important;
+        border: 1px solid black;
+        margin-top: 20px;
+        page-break-inside: avoid;
+    }
+
+    .chart-box canvas {
+        height: 220px !important;
+    }
+
+    /* ================= TABLE ================= */
+    .sales-title {
+        color: #000;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+
+    .sales-table {
+        font-size: 10px;
+        background: #fff !important;
+    }
+
+    .sales-table th {
+        background: #000;
+        color: #fff;
+        padding: 6px;
+    }
+
+    .sales-table td {
+        padding: 6px;
+        border: 1px solid #ccc;
+        color: #000;
+    }
+
+    .sales-table thead {
+        display: table-header-group;
+    }
+
+    .sales-table tr {
+        page-break-inside: avoid;
+    }
+}
+
+
+    

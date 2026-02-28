@@ -1,0 +1,107 @@
+.audit-title {
+    color: gold;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+}
+
+/* Form styling */
+.audit-form .form-control {
+    background: #111;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 8px 12px;
+    transition: 0.3s ease;
+}
+
+.audit-form .form-control::placeholder {
+    color: #ccc;
+}
+
+.audit-form .form-control:focus {
+    outline: none;
+    border-color: gold;
+    box-shadow: 0 0 8px gold;
+}
+
+/* Search button */
+.audit-form .btn {
+    background: linear-gradient(45deg, #d4af37, #ffd700);
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.audit-form .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 12px gold;
+}
+
+/* Card styling */
+.card {
+    background: #1a1a1a;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    color: #fff;
+    margin-bottom: 30px;
+}
+
+/* Table styling */
+.card table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #fff;
+}
+
+.card table th {
+    background: linear-gradient(90deg, #d4af37, #ffd700);
+    color: #000;
+    padding: 10px;
+    font-weight: 700;
+}
+
+.card table td {
+    background: #111;
+    padding: 10px;
+    border-bottom: 1px solid #333;
+    vertical-align: top;
+}
+
+.card table tr:hover td {
+    background: rgba(255, 215, 0, 0.1);
+}
+
+/* Pagination styling */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination .page-item .page-link {
+    background: #111;
+    color: gold;
+    border: 1px solid #333;
+    margin: 0 3px;
+    transition: 0.3s ease;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+.pagination .page-item.active .page-link {
+    background: linear-gradient(45deg, #d4af37, #ffd700);
+    color: #111;
+    border: none;
+}
+
+.pagination .page-item .page-link:hover {
+    background: gold;
+    color: #111;
+}

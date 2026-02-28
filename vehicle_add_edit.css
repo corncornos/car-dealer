@@ -1,0 +1,147 @@
+*{
+/* ADD VEHICLES BUTTON Container */
+/* Page Background */
+.add-edit-vehicle-page {
+  background: linear-gradient(135deg, #000, #111);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+
+.emoji-form-card {
+  background: #1a1a1a;
+  padding: 40px 30px;
+  border-radius: 20px;
+  max-width: 900px;
+  width: 100%;
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.3);
+  color: #fff;
+}
+
+.form-logo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-logo img {
+  width: 120px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 5px gold);
+}
+
+.emoji-form-card h3 {
+  text-align: center;
+  color: gold;
+  margin-bottom: 25px;
+}
+
+.vehicle-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.form-group {
+  flex: 1 1 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  flex: 1 1 100%;
+}
+
+/* Labels with emojis */
+.form-group label {
+  color: gold;
+  font-weight: 600;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+/* Inputs & Textarea & Select */
+.form-group input,
+textarea,
+select {
+  background: #111;
+  color:white;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.form-group input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: gold;
+  box-shadow: 0 0 8px gold;
+}
+
+/* File input button styling */
+.form-group input[type="file"]::-webkit-file-upload-button {
+  background: gold;
+  color: black;
+  border: none;
+  padding: 6px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+.form-group input[type="file"]::-webkit-file-upload-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px gold;
+}
+/* Save Button */
+.btn-emoji-save {
+  margin-top: 25px;
+  background: gold;
+  color:black;
+  font-weight: 600;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+  align-self: center;
+}
+
+.btn-emoji-save:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px gold;
+}
+/* Cancel Button */
+.btn-emoji-cancel {
+  margin-top: 25px;
+  background: gold;
+  color: black;
+  font-weight: 600;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+  align-self: center;
+}
+
+.btn-emoji-cancel:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px gold;
+}
+.form-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+}
+
