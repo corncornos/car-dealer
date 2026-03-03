@@ -304,6 +304,8 @@ img {
     100% { transform: translateX(-50%) translateY(0px); }
 }
 /* ===== Dashboard Container ===== */
+
+}
 .dashboard-container {
     padding: 20px;
     max-width: 12000px;
@@ -312,30 +314,32 @@ img {
 }
 
 .dashboard-main-box {
-    background: #111;
-    border: 2px solid gold;
-    border-radius: 16px;
+    max-width: 1200px;
+    margin: 40px auto;
     padding: 25px;
-    box-shadow: 0 10px 30px rgba(255,215,0,0.2);
-    color: gold;
+    border: 2px solid gold;
+    border-radius: 15px;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+    box-sizing: border-box;
 }
 
 /* ===== Stats Section ===== */
 .dashboard-stats-container {
+    width: 90%;
+    margin: 40px auto 20px auto; /* space above container */
     display: flex;
     justify-content: space-between;
     gap: 20px;
-    flex-wrap: wrap;
-    margin-bottom: 25px;
 }
 
 .dashboard-stat {
-    flex: 1 1 30%;
-    background: rgba(255,215,0,0.05);
-    border-radius: 12px;
-    padding: 15px;
+    flex: 1;
+    background: #111;
+    padding: 20px;
+    border-radius: 10px;
     text-align: center;
-    box-shadow: 0 5px 15px rgba(255,215,0,0.1);
+    color: #FFD700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
 }
 
 .dashboard-stat h5 {
@@ -375,9 +379,10 @@ img {
 /* ===== Action Buttons ===== */
 .dashboard-actions {
     display: flex;
-    gap: 10px;
     flex-wrap: wrap;
-    margin-bottom: 20px;
+    justify-content: center;   /* center buttons */
+    gap: 15px;                 /* small spacing */
+    margin: 20px;
 }
 
 .action-btn {
@@ -389,10 +394,9 @@ img {
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
-}
 
-.action-btn:hover {
-    background: #d4af37;
+    flex: 1 1 200px;   /* responsive width */
+    max-width: 250px;  /* prevent too wide */
 }
 
 /* ===============================
@@ -553,77 +557,111 @@ body {
 }
 
 /* ===== Container for 3 tables ===== */
+/* ===== Dashboard Preview Container ===== */
 .dashboard-preview-container {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 30px;
+    grid-template-columns: 1fr 1fr; /* 2 columns on top row */
+    grid-template-rows: auto;        /* rows auto height */
+    gap: 20px;                       /* spacing between cards */
+    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+    padding: 20px;
 }
 
-/* ===== Table Styles ===== */
+/* ===== Individual Card / Box ===== */
+.dashboard-preview-container > div {
+    background: #111;
+    border: 2px solid gold;
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* ===== Make Last Card Full Width ===== */
+.dashboard-preview-container > div:last-child {
+    grid-column: 1 / -1; /* span full width */
+}
+
+/* Hover effect for cards */
+.dashboard-preview-container > div:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+}
+
+/* ===== Preview Title ===== */
+.preview-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: gold;
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+/* ===== Table Container (scrollable if needed) ===== */
+.preview-table-container {
+    max-height: 320px;        /* Adjust to fit approx 5 rows */
+    overflow-y: auto;
+    overflow-x: hidden;
+	
+}
+/* Optional: Sticky header */
+.preview-container thead th {
+    position: sticky;
+    top: 0;
+    background: #111;  /* match your theme */
+    z-index: 2;
+}
+
+/* ===== Table Styling ===== */
 .preview-table {
     width: 100%;
     border-collapse: collapse;
-    background: #1a1a1a;
-    border: 2px solid #daa520; /* gold border */
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.7);
 }
 
 .preview-table th,
 .preview-table td {
-    padding: 10px 15px;
-    text-align: left;
-    border-bottom: 1px solid #333;
+    border: 1px solid gold;
+    padding: 8px;
+    font-size: 14px;
+    color: #fff;
+    text-align: center;
 }
 
 .preview-table th {
-    background: #daa520; /* gold header */
-    color: #111;
-    font-weight: bold;
+    background: #1a1a1a;
+    font-weight: 600;
 }
 
-.preview-table tr:last-child td {
-    border-bottom: none;
-}
-
-/* ===== Table Titles ===== */
-.preview-title {
-    font-size: 20px;
-    font-weight: bold;
-    color: #daa520; /* gold text */
-    margin-bottom: 10px;
-}
-
-/* ===== Buttons in tables ===== */
-.result-card button {
-    background: #daa520; /* gold buttons */
-    color: #111;
+/* ===== Cancel Button Styling ===== */
+.cancel-btn {
+    background: #b22222;
+    color: #fff;
     border: none;
-    padding: 6px 10px;
-    border-radius: 4px;
+    padding: 5px 10px;
+    border-radius: 5px;
     cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s ease;
 }
 
-.result-card button:hover {
-    background: #ffc966;
+.cancel-btn:hover {
+    background: #ff4d4d;
 }
 
-/* ===== Responsive Scroll for table container ===== */
-.preview-table-container {
-    overflow-x: auto;
-}
-
-/* ===== Small device adjustment ===== */
-@media(max-width: 768px){
+/* ===== Responsive Layout ===== */
+@media (max-width: 992px) {
     .dashboard-preview-container {
-        gap: 20px;
+        grid-template-columns: 1fr; /* stack all cards vertically */
     }
-    .preview-table th, .preview-table td {
-        padding: 8px 10px;
+
+    .dashboard-preview-container > div:last-child {
+        grid-column: 1 / -1; /* full width still */
     }
+}
 	
 	/* ==========================================
    MOBILE RESPONSIVE FIX (PHONES)
@@ -695,10 +733,12 @@ body {
     /* ===== ACTION BUTTONS FULL WIDTH ===== */
     .dashboard-actions {
         flex-direction: column;
+		gap: 10px;
     }
 
     .action-btn {
-        width: 100%;
+		width: 100%;
+        max-width: 100%;
         text-align: center;
     }
 
