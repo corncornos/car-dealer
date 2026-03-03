@@ -154,10 +154,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['uni
 
 
 <body>
-<div class="dashboard-container">
-    <div class="dashboard-main-box">
-
-        <!-- Stats Section -->
+<div class = "dashboard-container-stat">
+<!-- Stats Section -->
         <div class="dashboard-stats-container">
             <div class="dashboard-stat">
                 <h5>Total Vehicles</h5>
@@ -174,6 +172,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['uni
                 <h3>₱<?php echo number_format($inventoryValue,2); ?></h3>
             </div>
         </div>
+</div>
+<div class="dashboard-container">
+    <div class="dashboard-main-box">
 
 <!-- ===== Dashboard Action Buttons ===== -->
 <div class="dashboard-actions">
@@ -195,7 +196,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['uni
 						<th>Year</th>
                         <th>Brand / Model</th>
                         <th>Plate</th>
-                        <th>Price</th>
 						<th>Action</th>
                     </tr>
                 </thead>
@@ -205,7 +205,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['uni
 						<td><?= htmlspecialchars($unit['year'] ?? 'N/A') ?></td>
                         <td><?= htmlspecialchars($unit['brand'].' '.$unit['model']) ?></td>
                         <td><?= htmlspecialchars($unit['plate_number']) ?></td>
-                        <td>₱<?= number_format($unit['selling_price'],2) ?></td>
+                        
 						<td>
 						<form method="POST" onsubmit="return confirm('Cancel reservation?')">
 							<input type="hidden" name="unit_id" value="<?= $unit['id'] ?>">
@@ -231,7 +231,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['uni
 						<th>Year</th>
                         <th>Brand / Model</th>
                         <th>Plate</th>
-                        <th>Price</th>
                         <th>Person</th>
 						<th>Action</th>
                     </tr>
@@ -247,7 +246,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['uni
             : '<strong>All Available Cars</strong>' ?>
     </td>
     <td><?= $unit['vehicle_id'] ? htmlspecialchars($unit['plate_number']) : '—' ?></td>
-    <td><?= $unit['vehicle_id'] ? '₱'.number_format($unit['selling_price'],2) : '—' ?></td>
     <td><?= htmlspecialchars($unit['viewing_person']) ?></td>
     <td>
         <form method="POST">
