@@ -60,11 +60,16 @@ foreach ($monthly as $row) {
 }
 
 ?>
-<div class="report-header">
-    <h2>CAR INVENTORY SALES REPORT</h2>
-    <p>Date Printed: <?= date('F d, Y') ?></p>
-    <hr>
-</div>
+<div class="sales-wrapper">
+
+    <!-- PRINT HEADER -->
+    <div class="print-header">
+        <img src="images/logo.png" class="print-logo">
+        <div class="print-title">
+            <h2>CAR INVENTORY SALES REPORT</h2>
+            <p>Date Printed: <?= date('F d, Y') ?></p>
+        </div>
+    </div>
 
 <div class="charts-row">
     <div class="chart-box">

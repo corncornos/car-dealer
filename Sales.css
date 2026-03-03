@@ -119,21 +119,30 @@ body {
         padding: 8px;
     }
 }
-/* =====================================
-   CLEAN COMPACT PROFESSIONAL PRINT
-===================================== */
+/* ================= PRINT HEADER ================= */
+
+.print-header {
+    display: none;
+}
+
 @media print {
 
     @page {
         size: A4;
-        margin: 20mm 15mm 15mm 15mm;
-        
+        margin: 15mm 15mm 15mm 15mm; /* smaller top margin */
     }
 
     body {
+        margin: 0;
+        padding: 0;
         background: #fff !important;
         font-size: 11px;
         color: #000;
+    }
+
+    .sales-wrapper {
+        padding: 0 !important;  /* remove 30px screen padding */
+        margin: 0 !important;
     }
 
     /* Hide everything first */
@@ -147,105 +156,108 @@ body {
         visibility: visible;
     }
 
-    /* Remove filters & buttons */
-    .filter-bar,
-    button {
-        display: none !important;
+    /* Show print header */
+    .print-header {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 15px;
     }
 
-    /* ================= HEADER LOGO ================= */
-    .sales-wrapper {
-        position: relative;
-    }
-
-    .sales-wrapper::before {
-        content: "";
-        display: block;
-        background: url("images/logo.png") no-repeat center;
-        background-size: 100px;
+    .print-logo {
         height: 60px;
-        margin-bottom: 10px;
     }
 
-    /* ================= SUMMARY (1 ROW SMALL) ================= */
-    .summary {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .box {
-        background: none !important;
-        border: none !important;
-        box-shadow: none !important;
-        padding: 5px;
-        text-align: center;
-    }
-
-    .box h4 {
-        font-size: 10px;
-        color: #000;
-        margin-bottom: 3px;
-        font-weight: 600;
-    }
-
-    .box p {
-        font-size: 14px;
+    .print-title h2 {
         margin: 0;
+        font-size: 16px;
         font-weight: bold;
         color: #000;
     }
 
-    /* ================= CHARTS (SIDE BY SIDE SMALL) ================= */
-    .charts-row {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 15px;
+    .print-title p {
+        margin: 2px 0 0 0;
+        font-size: 11px;
+        color: #000;
     }
 
-    .chart-box {
-        flex: 1;
-        padding: 5px;
-        background: #fff !important;
-        border: 1px solid black;
-        margin-top: 20px;
-        page-break-inside: avoid;
+    /* Hide filters */
+    .filter-bar,
+    button {
+        display: none !important;
     }
-
-    .chart-box canvas {
-        height: 220px !important;
-    }
-
-    /* ================= TABLE ================= */
-    .sales-title {
+        .sales-title {
         color: #000;
         font-size: 12px;
-        margin-bottom: 5px;
+        margin: 10px 0 5px 0;
     }
 
     .sales-table {
-        font-size: 10px;
         background: #fff !important;
+        font-size: 10px;
     }
 
     .sales-table th {
-        background: #000;
-        color: #fff;
+        background: #000 !important;
+        color: #fff !important;
         padding: 6px;
     }
 
     .sales-table td {
+        background: #fff !important;
+        color: #000 !important;
+        border: 1px solid #000;
         padding: 6px;
-        border: 1px solid #ccc;
+    }
+        /* SUMMARY IN 1 ROW SMALL */
+    .summary {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        justify-content: space-between;
+        margin: 10px 0 15px 0;
+        gap: 10px;
+    }
+
+    .box {
+        background: none !important;
+        border: 1px solid #000;
+        box-shadow: none !important;
+        padding: 8px;
+        text-align: center;
+        flex: 1;
+    }
+
+    .box h4 {
+        font-size: 10px;
+        margin: 0 0 3px 0;
         color: #000;
     }
 
-    .sales-table thead {
-        display: table-header-group;
+    .box p {
+        font-size: 13px;
+        margin: 0;
+        font-weight: bold;
+        color: #000;
+    }
+        /* FIX CHART SIZE PROPERLY */
+    .chart-box {
+    background: #fff !important;
+    border: 1px solid #000;
+    padding: 5px;
+    margin-bottom: 15px;
+    page-break-inside: avoid;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: grayscale(100%);
     }
 
-    .sales-table tr {
-        page-break-inside: avoid;
-    }
+    .chart-box canvas {
+    width: 100% !important;
+    height: 250px !important;   /* smaller and controlled */
+}
 }
 
 

@@ -5,15 +5,21 @@
     margin-bottom: 20px;
     letter-spacing: 1px;
 }
-
 /* Form styling */
-.audit-form .form-control {
-    background: #111;
+.audit-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+.form-control {
+    background: #111111;
     color: #fff;
     border: 1px solid #333;
     border-radius: 6px;
     padding: 8px 12px;
     transition: 0.3s ease;
+    margin-bottom: 10px;
 }
 
 .audit-form .form-control::placeholder {
@@ -36,6 +42,7 @@
     border-radius: 8px;
     cursor: pointer;
     transition: 0.3s ease;
+    margin-bottom: 10px;
 }
 
 .audit-form .btn:hover {
