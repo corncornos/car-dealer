@@ -271,7 +271,7 @@ img {
     box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
 
-/* Grid System */
+
 
 /* DASHBOARD HEADER (INVISIBLE BACKGROUND + FLOAT EFFECT) */
 .dashboard-header {
@@ -291,7 +291,7 @@ img {
 
 /* LOGO STYLE */
 .dashboard-header img {
-    height: 35px;
+    height: 70px;
     filter: drop-shadow(0 0 8px #d4af37);
     align-items: center;
 	
@@ -306,7 +306,7 @@ img {
 /* ===== Dashboard Container ===== */
 .dashboard-container {
     padding: 20px;
-    max-width: 1200px;
+    max-width: 12000px;
     margin: 0 auto;
     font-family: 'Segoe UI', sans-serif;
 }
@@ -347,8 +347,31 @@ img {
 .dashboard-stat h3 {
     font-size: 28px;
     font-weight: bold;
+	color: white;
+}
+.close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: rgba(255,215,0,0.1);
+    border: 1px solid gold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: gold;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s ease;
 }
 
+.close:hover {
+    background: gold;
+    color: #111;
+    transform: rotate(90deg);
+}
 /* ===== Action Buttons ===== */
 .dashboard-actions {
     display: flex;
@@ -372,110 +395,154 @@ img {
     background: #d4af37;
 }
 
-/* ===== Modal Styling ===== */
+/* ===============================
+   GLOBAL MODAL FIX (ALL MODALS)
+================================= */
+
 .modal {
     display: none;
     position: fixed;
-    z-index: 999;
-    left: 0; 
-    top: 0;
-    width: 100%; 
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.7);
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.show {
+    display: flex;
 }
 
 .modal-content {
-    background: #111;
+    background: linear-gradient(145deg, #111, #1a1a1a);
     color: gold;
-    margin: 50px auto;
-    padding: 20px;
+    width: 95%;
+    max-width: 750px;
+    max-height: 85vh;          /* IMPORTANT */
+    overflow-y: auto;          /* ENABLE SCROLL */
+    padding: 25px;
+    border-radius: 14px;
     border: 2px solid gold;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 600px;
+    box-shadow: 0 10px 40px rgba(255,215,0,0.25);
     position: relative;
 }
 
-.modal-content h3 {
-    margin-top: 0;
+/* Gold Scrollbar */
+.modal-content::-webkit-scrollbar {
+    width: 8px;
 }
 
-.close {
-    position: absolute;
-    top: 10px;
-    right: 15px;
+.modal-content::-webkit-scrollbar-thumb {
+    background: gold;
+    border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: #111;
+}
+/* ===============================
+   FORM INPUT FIX
+================================= */
+
+.form-control,
+.form-select,
+.search-box input,
+.search-box select {
+    background: #000;
+    border: 1px solid gold;
     color: gold;
-    font-size: 24px;
-    cursor: pointer;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
 }
 
-/* ===== Search Box Inside Modal ===== */
-.search-box {
-    margin-top: 10px;
-    padding: 15px;
-    background: rgba(255,215,0,0.05);
-    border-radius: 12px;
+.form-control::placeholder,
+.search-box input::placeholder {
+    color: rgba(255,215,0,0.6);
+}
+
+.form-control:focus,
+.form-select:focus,
+.search-box input:focus,
+.search-box select:focus {
+    outline: none;
+    border-color: #ffc966;
+    box-shadow: 0 0 10px rgba(255,215,0,0.4);
+}
+/* ===============================
+   CARD ACTION LAYOUT
+================================= */
+
+.card-actions {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    margin-top: 12px;
 }
 
-.search-box input,
-.search-box select,
-.search-box button {
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: 1px solid gold;
-    background: #111;
-    color: gold;
+.card-actions input {
+    flex: 1;
+    min-width: 130px;
+}
+/* ===============================
+   CARD DESIGN IMPROVEMENT
+================================= */
+
+.result-card,
+.reserved-card {
+    background: linear-gradient(145deg, #1a1a1a, #111);
+    border: 1px solid rgba(255,215,0,0.4);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 15px;
+    box-shadow: 0 5px 20px rgba(255,215,0,0.15);
+    transition: 0.3s ease;
+	margin-top: 10px;
 }
 
-.search-box button {
-    background: gold;
+.result-card:hover,
+.reserved-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255,215,0,0.35);
+}
+
+/* ===============================
+   BUTTON SYSTEM
+================================= */
+
+button,
+.btn,
+.search-box button,
+.result-card button {
+    background: linear-gradient(145deg, gold, #d4af37);
     color: #111;
     border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.search-box button:hover {
-    background: #d4af37;
+button:hover,
+.btn:hover,
+.search-box button:hover,
+.result-card button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(255,215,0,0.5);
 }
 
-/* ===== Search Results ===== */
-.search-results-container {
-    margin-top: 20px;
+/* Cancel Button */
+.cancel-btn {
+    background: #8b0000;
+    color: white;
 }
 
-.result-section {
-    margin-bottom: 20px;
+.cancel-btn:hover {
+    background: #cc0000;
 }
 
-.result-section h5 {
-    margin-bottom: 10px;
-    font-size: 16px;
-}
-
-.result-card {
-    background: rgba(255,215,0,0.05);
-    padding: 12px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    border-left: 4px solid gold;
-}
-.reserved-units-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.reserved-card {
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 6px;
-    width: 200px;
-    background: #f5f5f5;
-}
 /* ===== Dashboard Body ===== */
 body {
     background: #111; /* dark black background */
@@ -557,17 +624,130 @@ body {
     .preview-table th, .preview-table td {
         padding: 8px 10px;
     }
-}
-.cancel-btn {
-    background: #b22222;
-    color: #fff;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-}
+	
+	/* ==========================================
+   MOBILE RESPONSIVE FIX (PHONES)
+========================================== */
+@media (max-width: 768px) {
 
-.cancel-btn:hover {
-    background: #ff4d4d;
+    /* ===== BODY ===== */
+    body {
+        padding: 10px;
+    }
+
+    /* ===== SIDEBAR (Mobile Friendly) ===== */
+    .side-nav {
+        left: -100%;
+        width: 220px;
+    }
+
+    /* Remove hover open on mobile */
+    .side-nav:hover {
+        left: -100%;
+    }
+
+    /* Add active class support (use JS to toggle .active) */
+    .side-nav.active {
+        left: 0;
+    }
+
+    .side-nav-toggle {
+        right: -45px;
+        top: 20px;
+    }
+
+    /* ===== HEADER FIX ===== */
+    .dashboard-header {
+        position: relative;
+        left: 0;
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .dashboard-header img {
+        height: 55px;
+    }
+
+    /* ===== DASHBOARD CONTAINER ===== */
+    .dashboard-container {
+        padding: 10px;
+    }
+
+    .dashboard-main-box {
+        padding: 15px;
+    }
+
+    /* ===== STATS STACK VERTICALLY ===== */
+    .dashboard-stats-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .dashboard-stat {
+        flex: 1 1 100%;
+    }
+
+    .dashboard-stat h3 {
+        font-size: 22px;
+    }
+
+    /* ===== ACTION BUTTONS FULL WIDTH ===== */
+    .dashboard-actions {
+        flex-direction: column;
+    }
+
+    .action-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* ===== TABLE FIX ===== */
+    .table th,
+    .table td,
+    .preview-table th,
+    .preview-table td {
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    .preview-title {
+        font-size: 16px;
+    }
+
+    /* ===== MODAL FULL WIDTH ===== */
+    .modal-content {
+        width: 95%;
+        padding: 15px;
+        max-height: 90vh;
+    }
+
+    /* ===== CARD ACTION STACK ===== */
+    .card-actions {
+        flex-direction: column;
+    }
+
+    .card-actions input,
+    .card-actions button {
+        width: 100%;
+    }
+
+    /* ===== BUTTON FIX ===== */
+    button,
+    .btn {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+
+    /* ===== CLOSE BUTTON POSITION ===== */
+    .close {
+        top: 10px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        font-size: 16px;
+    }
+
+}
+	
 }

@@ -14,6 +14,14 @@ require 'header.php';
 
 ?>
 <?php
+if(isset($_POST['delete_viewing_id'])){
+    $id = intval($_POST['delete_viewing_id']);
+    $stmt = $pdo->prepare("DELETE FROM viewing_schedules WHERE id=?");
+    $stmt->execute([$id]);
+    header("Location: dashboard.php");
+    exit();
+}
+
 // ======================= HANDLE POST ACTIONS =======================
 
 // Single Reserve
@@ -33,16 +41,25 @@ if(isset($_POST['bulk_reserve']) && !empty($_POST['bulk_ids'])){
     header("Location: dashboard.php"); exit();
 }
 
-// Schedule Viewing
+// ================= SCHEDULE VIEWING =================
 if(isset($_POST['schedule_viewing'])){
-    $id = intval($_POST['vehicle_id']);
+
+    $vehicleId = !empty($_POST['vehicle_id']) ? intval($_POST['vehicle_id']) : null;
     $date = $_POST['viewing_date'];
     $person = trim($_POST['viewing_person']);
     $today = date('Y-m-d');
+
     if($date >= $today && $person !== ''){
-        $stmt = $pdo->prepare("UPDATE vehicles SET viewing_date=?, viewing_person=? WHERE id=?");
-        $stmt->execute([$date,$person,$id]);
-        header("Location: dashboard.php"); exit();
+
+        $stmt = $pdo->prepare("
+            INSERT INTO viewing_schedules (vehicle_id, viewing_date, viewing_person)
+            VALUES (?, ?, ?)
+        ");
+
+        $stmt->execute([$vehicleId, $date, $person]);
+
+        header("Location: dashboard.php");
+        exit();
     } else {
         echo "<script>alert('Invalid date or person name.');</script>";
     }
@@ -64,8 +81,12 @@ $reservedUnits = $pdo->query("SELECT * FROM vehicles WHERE status='Reserved' ORD
 // Available units
 $availableUnits = $pdo->query("SELECT * FROM vehicles WHERE status='Available' ORDER BY created_at DESC")->fetchAll(PDO::FETCH_ASSOC);
 
-// Viewing units (Reserved + optional scheduled)
-$viewingUnits = $pdo->query("SELECT * FROM vehicles WHERE status='Reserved'ORDER BY viewing_date DESC")->fetchAll(PDO::FETCH_ASSOC);
+$viewingUnits = $pdo->query("
+    SELECT vs.*, v.brand, v.model, v.plate_number, v.year, v.selling_price
+    FROM viewing_schedules vs
+    LEFT JOIN vehicles v ON vs.vehicle_id = v.id
+    ORDER BY vs.viewing_date ASC
+")->fetchAll(PDO::FETCH_ASSOC);
 
 // Priority units
 $priorityUnits = $pdo->query("SELECT * FROM vehicles WHERE status='Priority'ORDER BY created_at DESC")->fetchAll(PDO::FETCH_ASSOC);
@@ -216,23 +237,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['uni
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach($viewingUnits as $unit): ?>
-                    <tr>
-						<td><?= $unit['viewing_date'] ?? 'Not scheduled' ?></td>
-						<td><?= htmlspecialchars($unit['year'] ?? 'N/A') ?></td>
-                        <td><?= htmlspecialchars($unit['brand'].' '.$unit['model']) ?></td>
-                        <td><?= htmlspecialchars($unit['plate_number']) ?></td>
-                        <td>₱<?= number_format($unit['selling_price'],2) ?></td>
-                        <td><?= htmlspecialchars($unit['viewing_person'] ?? 'N/A') ?></td>
-						<td>
-						<form method="POST" onsubmit="return confirm('Cancel viewing schedule?')">
-							<input type="hidden" name="unit_id" value="<?= $unit['id'] ?>">
-							<input type="hidden" name="action" value="cancel_viewing">
-							<button type="submit" class="cancel-btn">Cancel</button>
-						</form>
-					</td>
-                    </tr>
-                    <?php endforeach; ?>
+                   <?php foreach($viewingUnits as $unit): ?>
+<tr>
+    <td><?= htmlspecialchars($unit['viewing_date']) ?></td>
+    <td><?= $unit['vehicle_id'] ? htmlspecialchars($unit['year']) : '—' ?></td>
+    <td>
+        <?= $unit['vehicle_id'] 
+            ? htmlspecialchars($unit['brand'].' '.$unit['model']) 
+            : '<strong>All Available Cars</strong>' ?>
+    </td>
+    <td><?= $unit['vehicle_id'] ? htmlspecialchars($unit['plate_number']) : '—' ?></td>
+    <td><?= $unit['vehicle_id'] ? '₱'.number_format($unit['selling_price'],2) : '—' ?></td>
+    <td><?= htmlspecialchars($unit['viewing_person']) ?></td>
+    <td>
+        <form method="POST">
+            <input type="hidden" name="delete_viewing_id" value="<?= $unit['id'] ?>">
+            <button type="submit" class="cancel-btn">Cancel</button>
+        </form>
+    </td>
+</tr>
+<?php endforeach; ?>
                 </tbody>
             </table>
         </div>
@@ -319,15 +343,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['uni
         <span class="close" onclick="closeModal('viewingModal')">&times;</span>
         <h3>Viewing Schedule</h3>
 
-        <form method="GET">
-            <input type="text" name="viewing_value" placeholder="Search reserved units..." value="<?= htmlspecialchars($_GET['viewing_value'] ?? '') ?>">
-            <select name="viewing_field">
-                <option value="brand" <?= (($_GET['viewing_field'] ?? '')=='brand')?'selected':'' ?>>Brand</option>
-                <option value="model" <?= (($_GET['viewing_field'] ?? '')=='model')?'selected':'' ?>>Model</option>
-                <option value="plate_number" <?= (($_GET['viewing_field'] ?? '')=='plate_number')?'selected':'' ?>>Plate</option>
-            </select>
-            <button type="submit" name="search_viewing">Search</button>
-        </form>
+        
+
+<form method="POST">
+    <label>Viewing Type:</label>
+    <select id="viewingType" onchange="toggleVehicleSelect()">
+        <option value="specific">Specific Car</option>
+        <option value="all">All Available Cars</option>
+    </select>
+
+    <div id="vehicleSelectWrapper">
+        <select name="vehicle_id">
+            <option value="">Select Vehicle</option>
+            <?php
+            $cars = $pdo->query("SELECT id, brand, model FROM vehicles WHERE status='Available'")->fetchAll(PDO::FETCH_ASSOC);
+            foreach($cars as $car){
+                echo "<option value='{$car['id']}'>".$car['brand']." ".$car['model']."</option>";
+            }
+            ?>
+        </select>
+    </div>
+
+    <input type="date" name="viewing_date" required>
+    <input type="text" name="viewing_person" placeholder="Person Name" required>
+
+    <button type="submit" name="schedule_viewing">Create Schedule</button>
+</form>
 
         <div class="search-results-container">
             <?php foreach($viewingUnits as $unit): ?>
@@ -388,7 +429,17 @@ window.addEventListener("click",function(e){document.querySelectorAll(".modal").
 <?php if($openReservedModal): ?>document.addEventListener("DOMContentLoaded",()=>{openModal('reservedModal');});<?php endif; ?>
 <?php if($openViewingModal): ?>document.addEventListener("DOMContentLoaded",()=>{openModal('viewingModal');});<?php endif; ?>
 <?php if($openPriorityModal): ?>document.addEventListener("DOMContentLoaded",()=>{openModal('priorityModal');});<?php endif; ?>
+
+function toggleVehicleSelect(){
+    const type = document.getElementById('viewingType').value;
+    const wrapper = document.getElementById('vehicleSelectWrapper');
+
+    if(type === 'all'){
+        wrapper.style.display = 'none';
+        wrapper.querySelector('select').value = '';
+    } else {
+        wrapper.style.display = 'block';
+    }
+}
 </script>
-
-
 </body>
