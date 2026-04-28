@@ -1,0 +1,13 @@
+.btn-export {
+    display: inline-block;
+    background:linear-gradient(145deg, gold, #d4af37);
+    color: black;
+    padding: 8px 18px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+        
+  
+}
+.btn-export:hover { background: #ffcc00; }

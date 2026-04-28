@@ -1,0 +1,861 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f8f9fa;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Side Navigation */
+.side-nav {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 250px;
+    height: 100vh;
+    background: linear-gradient(145deg, #000000 0%, #111111 60%, #1a1a1a 100%);
+    transition: left 0.3s ease;
+    z-index: 1000;
+    box-shadow: 4px 0 25px rgba(212, 175, 55, 0.2);
+    border-right: 1px solid #d4af37;
+
+}
+
+.side-nav:hover {
+    left: 0;
+
+}
+
+/* Toggle Button */
+.side-nav-toggle {
+    position: absolute;
+    right: -40px;
+    top: 30px;
+    width: 40px;
+    height: 40px;
+    background: #000;
+    border: 1px solid #d4af37;
+    color: #d4af37;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+    transition: 0.3s ease;
+}
+
+.side-nav-toggle:hover {
+    background: #d4af37;
+    color: #000;
+}
+
+/* Header */
+.side-nav-header {
+    padding: 20px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.side-nav-logo {
+    width: 120px;
+    height: auto;
+    filter: drop-shadow(0 0 8px #d4af37);
+}
+
+/* Menu */
+.side-nav-menu {
+    list-style: none;
+    padding: 20px 0;
+}
+
+.side-nav-item {
+    margin-bottom: 5px;
+}
+
+.side-nav-link {
+    display: block;
+    padding: 12px 20px;
+    color: #d4af37;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+    font-weight: 500;
+}
+
+.side-nav-link:hover {
+    background: rgba(212, 175, 55, 0.08);
+    border-left-color: #d4af37;
+    padding-left: 25px;
+    text-shadow: 0 0 8px #d4af37;
+}
+
+/* User Section */
+.side-nav-user {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.2);  /* semi-transparent */
+    border-top: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.side-nav-user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 12px;
+    color: #d4af37;
+    font-size: 14px;
+}
+.side-nav-user-info .user-icon {
+    font-size: 24px;
+    margin-bottom: 6px;
+    filter: drop-shadow(0 0 6px #d4af37);
+}
+/* User Name */
+.side-nav-user-info .user-name {
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* Logout Button */
+.logout-btn {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    background: #000;
+    color: #d4af37;
+    border: 1px solid #d4af37;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: #d4af37;
+    color: #000;
+    box-shadow: 0 0 10px #d4af37;
+    transform: translateY(-2px);
+}
+
+/* Login Button */
+.login-btn {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    background: transparent;
+    color: #d4af37;
+    border: 1px solid #d4af37;
+    transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+    background: #d4af37;
+    color: #000;
+    box-shadow: 0 0 10px #d4af37;
+    transform: translateY(-2px);
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 0;
+    transition: margin-left 0.3s ease;
+    min-height: 100vh;
+    
+    background-size: 1000px;
+    background-position: center;
+
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Tables */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: linear-gradient(145deg, #111, #1a1a1a);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.table th,
+.table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+    color: #d4af37;
+}
+
+.table th {
+    background: #000;
+    color: #d4af37;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #d4af37;
+}
+
+.table tbody tr:hover {
+    background: rgba(212, 175, 55, 0.07);
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 25px;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    margin-right: 5px;
+    border: 1px solid #d4af37;
+    background: #000;
+    color: #d4af37;
+}
+.btn:hover {
+    background: #d4af37;
+    color: #000;
+    box-shadow: 0 0 12px #d4af37;
+    transform: translateY(-2px);
+}
+
+/* Optional colored glow variations */
+.btn-success { border-color: #d4af37; }
+.btn-danger { border-color: #d4af37; }
+.btn-primary { border-color: #d4af37; }
+.btn-secondary { border-color: #d4af37; }
+
+/* Forms */
+.form-control,
+.form-select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+
+
+/* DASHBOARD HEADER (INVISIBLE BACKGROUND + FLOAT EFFECT) */
+.dashboard-header {
+    position: fixed;
+    top: 0;
+    left: 80px; /* space for sidebar */
+    width: 100px;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;  /* invisible */
+    border: none;             /* remove border */
+    z-index: 999;
+    animation: floatLogo 3s ease-in-out infinite alternate;
+}
+
+/* LOGO STYLE */
+.dashboard-header img {
+    height: 70px;
+    filter: drop-shadow(0 0 8px #d4af37);
+    align-items: center;
+	
+}
+
+/* FLOAT ANIMATION */
+@keyframes floatLogo {
+    0% { transform: translateX(-50%) translateY(0px); }
+    50% { transform: translateX(-50%) translateY(-5px); }
+    100% { transform: translateX(-50%) translateY(0px); }
+}
+/* ===== Dashboard Container ===== */
+
+.dashboard-container {
+    padding: 20px;
+    max-width: 12000px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.dashboard-main-box {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 25px;
+    border: 2px solid rgba(255, 251, 0, 0.823);
+    border-radius: 15px;
+    box-shadow: 0 0 25px rgb(151, 141, 8);
+    box-sizing: border-box;
+}
+
+/* ===== Stats Section ===== */
+.dashboard-stats-container {
+    width: 100%;
+    margin: 10px auto 2px auto; /* space above container */
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.dashboard-stat {
+    flex: 1;
+    background: #000000;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    color: #000000;
+    box-shadow: 0 0 15px rgba(158, 154, 139, 0.721);
+}
+
+.dashboard-stat h5 {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: gold;
+}
+
+.dashboard-stat h3 {
+    font-size: 28px;
+    font-weight: bold;
+	color: white;
+}
+.close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: rgba(255,215,0,0.1);
+    border: 1px solid gold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: gold;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.close:hover {
+    background: gold;
+    color: #111;
+    transform: rotate(90deg);
+}
+
+/* ===============================
+   GLOBAL MODAL FIX (ALL MODALS)
+================================= */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background:#000000;
+    color: rgb(255, 255, 255);
+    width: 95%;
+    max-width: 750px;
+    max-height: 85vh;          /* IMPORTANT */
+    overflow-y: auto;          /* ENABLE SCROLL */
+    padding: 25px;
+    border-radius: 14px;
+    border: 2px solid rgb(0, 0, 0);
+    box-shadow: 0 10px 40px rgba(255,215,0,0.25);
+    position: relative;
+    
+}
+
+.search-results-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 25px;
+}
+/* Gold Scrollbar */
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: gold;
+    border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: #111;
+}
+/* ===============================
+   FORM INPUT FIX
+================================= */
+
+.form-control,
+.form-select,
+.search-box input,
+.search-box select {
+    background: #000;
+    border: 1px solid rgb(255, 255, 255);
+    color: rgb(251, 246, 220);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+}
+
+.form-control::placeholder,
+.search-box input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+.search-box input {
+    color: black;
+}
+.form-control:focus,
+.form-select:focus,
+.search-box input:focus,
+.search-box select:focus {
+    outline: none;
+    border-color: #ffc966;
+    box-shadow: 0 0 10px rgba(255,215,0,0.4);
+}
+/* ===============================
+   CARD ACTION LAYOUT
+================================= */
+
+.card-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+.card-actions input {
+    flex: 1;
+    min-width: 130px;
+}
+/* ===============================
+   CARD DESIGN IMPROVEMENT
+================================= */
+
+.result-card,
+.reserved-card {
+    background: rgb(0, 0, 0) ;
+    border: 1px solid rgb(255, 217, 0);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 15px;
+    box-shadow: 0 5px 20px rgb(255, 217, 0);
+    transition: 0.3s ease;
+	margin-top: 10px;
+}
+.priority-card {
+    background: rgb(0, 0, 0);
+    border: 1px solid rgb(255, 0, 0);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 15px;
+    box-shadow: 0 5px 20px rgba(255, 0, 0);
+    transition: 0.3s ease;
+	margin-top: 10px;
+}
+
+.priority-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(153, 1, 1, 0.35);
+}
+.view-card {
+    background: #00000076;;
+    border: 1px solid rgb(0, 217, 255);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 15px;
+    box-shadow: 0 5px 20px rgba(0, 217, 255);
+    transition: 0.3s ease;
+	margin-top: 10px;
+}
+
+.view-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px #00ffff76;
+}
+
+.result-card:hover,
+.reserved-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255,215,0,0.35);
+}
+
+/* ===============================
+   BUTTON SYSTEM
+================================= */
+
+button,
+.btn,
+.search-box button,
+.result-card button {
+    background: linear-gradient(145deg, gold, #d4af37);
+    color: #111;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover,
+.btn:hover,
+.search-box button:hover,
+.result-card button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(255,215,0,0.5);
+}
+
+/* Cancel Button */
+.cancel-btn {
+    background: #8b0000;
+    color: white;
+}
+
+.cancel-btn:hover {
+    background: #cc0000;
+}
+
+/* ===== Dashboard Body ===== */
+body {
+    background: #111; /* dark black background */
+    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+/* ===== Container for 3 tables ===== */
+/* ===== Dashboard Preview Container ===== */
+.dashboard-preview-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 columns on top row */
+    grid-template-rows: auto;        /* rows auto height */
+    gap: 20px;                       /* spacing between cards */
+    width: 100%;
+    max-width: 10000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ===== Individual Card / Box ===== */
+.dashboard-preview-container > div {
+    background: #22202063;
+    border: 2px solid rgb(121, 113, 113);
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* ===== Make Last Card Full Width ===== */
+.dashboard-preview-container > div:last-child {
+    grid-column: 1 / -1; /* span full width */
+}
+
+/* Hover effect for cards */
+.dashboard-preview-container > div:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+}
+
+/* ===== Preview Title ===== */
+.preview-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #00ffffda;
+    text-align: center;
+    margin-bottom: 12px;
+}
+.preview-reserved-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: gold;
+    text-align: center;
+    margin-bottom: 12px;
+}
+.preview-priority-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #ff0000c1;
+    text-align: center;
+    margin-bottom: 12px;
+}
+/* ===== Table Container (scrollable if needed) ===== */
+.preview-table-container {
+    max-height: 320px;        /* Adjust to fit approx 5 rows */
+    overflow-y: auto;
+    overflow-x: hidden;
+	
+}
+.preview-table-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.preview-table-container::-webkit-scrollbar-thumb {
+    background: gold;
+    border-radius: 10px;
+}
+
+.preview-table-container::-webkit-scrollbar-track {
+    background: #111;
+}
+/* Optional: Sticky header */
+.preview-container thead th {
+    position: sticky;
+    top: 0;
+    background: #111;  /* match your theme */
+    z-index: 2;
+}
+
+/* ===== Table Styling ===== */
+.preview-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.preview-table th,
+.preview-table td {
+    border: 1px solid rgb(0, 0, 0);
+    padding: 8px;
+    font-size: 14px;
+    color: #fff;
+    text-align: center;
+}
+
+.preview-table th {
+    background: #1a1a1a;
+    font-weight: 600;
+}
+
+/* ===== Cancel Button Styling ===== */
+.cancel-btn {
+    background: #b22222;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s ease;
+}
+
+.cancel-btn:hover {
+    background: #ff4d4d;
+}
+
+/* ===== Pagination ===== */
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3px;
+    margin: 10px 0;
+}
+
+.pagination a {
+    display: inline-block;
+    padding: 1px 1px;
+    background: #000;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.3s;
+    min-width: 30px;
+    text-align: center;
+}
+.pagination a.active,
+.pagination a:hover {
+    background: #d4af37;
+    color: #000;
+}
+
+/* ===== Responsive Layout ===== */
+@media (max-width: 992px) {
+    .dashboard-preview-container {
+        grid-template-columns: 1fr; /* stack all cards vertically */
+    }
+
+    .dashboard-preview-container > div:last-child {
+        grid-column: 1 / -1; /* full width still */
+    }
+}
+	
+	/* ==========================================
+   MOBILE RESPONSIVE FIX (PHONES)
+========================================== */
+@media (max-width: 768px) {
+
+    /* ===== BODY ===== */
+    body {
+        padding: 10px;
+    }
+
+    /* ===== SIDEBAR (Mobile Friendly) ===== */
+    .side-nav {
+        left: -100%;
+        width: 220px;
+    }
+
+    /* Remove hover open on mobile */
+    .side-nav:hover {
+        left: -100%;
+    }
+
+    /* Add active class support (use JS to toggle .active) */
+    .side-nav.active {
+        left: 0;
+    }
+
+    .side-nav-toggle {
+        right: -45px;
+        top: 20px;
+    }
+
+    /* ===== HEADER FIX ===== */
+    .dashboard-header {
+        position: relative;
+        left: 0;
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .dashboard-header img {
+        height: 55px;
+    }
+
+    /* ===== DASHBOARD CONTAINER ===== */
+    .dashboard-container {
+        padding: 10px;
+    }
+
+    .dashboard-main-box {
+        padding: 15px;
+    }
+
+    /* ===== STATS STACK VERTICALLY ===== */
+    .dashboard-stats-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .dashboard-stat {
+        flex: 1 1 100%;
+    }
+
+    .dashboard-stat h3 {
+        font-size: 22px;
+    }
+
+    /* ===== ACTION BUTTONS FULL WIDTH ===== */
+    .dashboard-actions {
+        flex-direction: column;
+		gap: 10px;
+    }
+
+    .action-btn {
+		width: 100%;
+        max-width: 100%;
+        text-align: center;
+    }
+
+    /* ===== TABLE FIX ===== */
+    .table th,
+    .table td,
+    .preview-table th,
+    .preview-table td {
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    .preview-title {
+        font-size: 16px;
+    }
+
+    /* ===== MODAL FULL WIDTH ===== */
+    .modal-content {
+        width: 95%;
+        padding: 15px;
+        max-height: 90vh;
+    }
+
+    /* ===== CARD ACTION STACK ===== */
+    .card-actions {
+        flex-direction: column;
+    }
+
+    .card-actions input,
+    .card-actions button {
+        width: 100%;
+    }
+
+    /* ===== BUTTON FIX ===== */
+    button,
+    .btn {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+
+    /* ===== CLOSE BUTTON POSITION ===== */
+    .close {
+        top: 10px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        font-size: 16px;
+    }
+
+}
+	
