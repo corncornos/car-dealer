@@ -1,6 +1,7 @@
 <?php
 session_start();
-require_once __DIR__ . '/config.php';
+
+require_once __DIR__ . '/core/config.php';
 
 if (!isset($_SESSION['user'])) {
     header('Location: login.php');
@@ -12,27 +13,30 @@ $pdo = getPDO();
 /* =============================
    FETCH TABLE DATA
 ============================= */
-$stmt = $pdo->query("
+$stmt = $pdo->prepare("
     SELECT s.*, v.brand, v.model
     FROM sales s
     JOIN vehicles v ON v.id = s.vehicle_id
     ORDER BY s.sale_date DESC
 ");
+$stmt->execute();
 $sales = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 /* =============================
    SUMMARY DATA
 ============================= */
-$totalSales = $pdo->query("
-    SELECT COALESCE(SUM(sale_price),0) FROM sales
-")->fetchColumn();
+$stmt = $pdo->prepare('SELECT COALESCE(SUM(sale_price),0) FROM sales');
+$stmt->execute();
+$totalSales = $stmt->fetchColumn();
 
-$totalSold = $pdo->query("
-    SELECT COUNT(*) FROM sales
-")->fetchColumn();
+$stmt = $pdo->prepare('SELECT COUNT(*) FROM sales');
+$stmt->execute();
+$totalSold = $stmt->fetchColumn();
 
-require 'header.php';
+require 'core/header.php';
 ?>
+<link rel="stylesheet" href="assets/css/export_button.css">
+<a href="export.php?type=sales" class="btn-export">⬇ Export Sales CSV</a>
 
 <link rel="stylesheet" href="assets/css/sales.css">
 
@@ -154,4 +158,4 @@ document.getElementById('printReport').addEventListener('click', function(){
 </script>
 
 
-<?php require 'footer.php'; ?>
+<?php require 'core/footer.php'; ?>

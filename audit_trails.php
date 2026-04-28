@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/core/config.php';
 if (!isset($_SESSION['user'])) header('Location: login.php');
 $pdo = getPDO();
 
@@ -118,9 +118,11 @@ function format_audit_detail($detail, $action = '') {
   return '<div class="small">' . implode('<br>', $parts) . '</div>';
 }
 
-require 'header.php';
+require 'core/header.php';
 if (!isAdmin()) { header('Location: dashboard.php'); exit; }
 ?>
+<link rel="stylesheet" href="assets/css/export_button.css">
+<a href="export.php?type=audit" class="btn-export">⬇ Export Audit Log CSV</a>
 <h3 class="audit-title">Audit Trails</h3>
 
 <form method="get" class="row g-2 mb-3 audit-form">
@@ -176,5 +178,5 @@ if (!isAdmin()) { header('Location: dashboard.php'); exit; }
     </nav>
   </div>
 </div>
-<?php require 'footer.php'; ?>
+<?php require 'core/footer.php'; ?>
 

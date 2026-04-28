@@ -1,7 +1,15 @@
 <?php
 session_start();
-require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/core/config.php';
 if (!isset($_SESSION['user'])) header('Location: login.php');
+
+// Handle clearing session error via AJAX
+if (isset($_GET['clear_error'])) {
+    unset($_SESSION['validation_error']);
+    echo 'cleared';
+    exit();
+}
+
 $pdo = getPDO();
 $id = $_GET['id'] ?? null;
 if (!$id) { header('Location: vehicles.php'); exit; }
@@ -10,74 +18,104 @@ $stmt->execute([$id]);
 $v = $stmt->fetch();
 if (!$v) { header('Location: vehicles.php'); exit; }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Validate CSRF token
+    if (!isset($_POST['csrf_token']) || !validateCSRFToken($_POST['csrf_token'])) {
+        showValidationError('CSRF token validation failed. Please refresh the page and try again.');
+        exit();
+    }
+    
     $imagePath = $v['image_path'] ?? null;
     if (!empty($_FILES['image']['name'])) {
         $uploadDir = __DIR__ . '/uploads/vehicles';
         if (!is_dir($uploadDir)) {
             @mkdir($uploadDir, 0777, true);
         }
-        $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-        $ext = strtolower($ext);
-        $allowed = ['jpg','jpeg','png','gif','webp'];
-        if (in_array($ext, $allowed)) {
-            $filename = 'veh_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
-            $target = $uploadDir . '/' . $filename;
-            if (move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
-                // optionally remove old file
-                if (!empty($imagePath) && is_file(__DIR__ . '/' . $imagePath)) {
-                    @unlink(__DIR__ . '/' . $imagePath);
+    }
+    
+    // Validate and sanitize input
+    try {
+        // Validate file upload if image was provided
+        if (!empty($_FILES['image']['name'])) {
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            validateFileUpload($_FILES['image'], $allowedTypes, 5242880); // 5MB limit
+            
+            $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+            $ext = strtolower($ext);
+            $allowed = ['jpg','jpeg','png','gif','webp'];
+            if (in_array($ext, $allowed)) {
+                $filename = 'veh_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
+                $target = $uploadDir . '/' . $filename;
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
+                    $imagePath = 'uploads/vehicles/' . $filename;
                 }
-                $imagePath = 'uploads/vehicles/' . $filename;
             }
         }
+        
+        $brand = validateRequired($_POST['brand'] ?? '', 'Brand');
+        $brand = validateString($brand, 'Brand', 1, 100);
+        
+        $model = validateRequired($_POST['model'] ?? '', 'Model');
+        $model = validateString($model, 'Model', 1, 100);
+        
+        $year = validateYear($_POST['year'] ?? '');
+        
+        $color = validateString($_POST['color'] ?? '', 'Color', 0, 50);
+        
+        $transmission = validateString($_POST['transmission'] ?? '', 'Transmission', 0, 50);
+        
+        $fuel_type = validateString($_POST['fuel_type'] ?? '', 'Fuel Type', 0, 50);
+        
+        $mileage = validateNumber($_POST['mileage'] ?? '0', 'Mileage', 0, 9999999);
+        
+        $engine_type = validateString($_POST['engine_type'] ?? '', 'Engine Type', 0, 100);
+        
+        $plate_number = validatePlateNumber($_POST['plate_number'] ?? '');
+        
+        $body_type = validateString($_POST['body_type'] ?? '', 'Body Type', 0, 50);
+        
+        $purchase_price = validatePrice($_POST['purchase_price'] ?? '0');
+        $selling_price = validatePrice($_POST['selling_price'] ?? '0');
+        
+        $status = in_array($_POST['status'] ?? '', ['Available', 'Reserved', 'Sold', 'Priority']) 
+            ? $_POST['status'] 
+            : 'Available';
+        
+        $notes = validateString($_POST['notes'] ?? '', 'Notes', 0, 1000);
+        
+    } catch (InvalidArgumentException $e) {
+        showValidationError($e->getMessage());
+        exit();
     }
-    $after = [
-        'brand' => $_POST['brand'] ?? null,
-        'model' => $_POST['model'] ?? null,
-        'year' => $_POST['year'] ?? null,
-        'color' => $_POST['color'] ?? null,
-        'transmission' => $_POST['transmission'] ?? null,
-        'fuel_type' => $_POST['fuel_type'] ?? null,
-        'mileage' => $_POST['mileage'] ?? null,
-        'engine_type' => $_POST['engine_type'] ?? null,
-        'plate_number' => $_POST['plate_number'] ?? null,
-        'body_type' => $_POST['body_type'] ?? null,
-        'purchase_price' => $_POST['purchase_price'] ?? null,
-        'selling_price' => $_POST['selling_price'] ?? null,
+    
+    $stmt = $pdo->prepare('UPDATE vehicles SET brand=?, model=?, year=?, color=?, transmission=?, fuel_type=?, mileage=?, engine_type=?, plate_number=?, body_type=?, purchase_price=?, selling_price=?, image_path=?, status=?, notes=? WHERE id=?');
+    $stmt->execute([$brand, $model, $year, $color, $transmission, $fuel_type, $mileage, $engine_type, $plate_number, $body_type, $purchase_price, $selling_price, $imagePath, $status, $notes, $id]);
+    
+    // Create after state for audit
+    $afterState = [
+        'brand' => $brand,
+        'model' => $model,
+        'year' => $year,
+        'color' => $color,
+        'transmission' => $transmission,
+        'fuel_type' => $fuel_type,
+        'mileage' => $mileage,
+        'engine_type' => $engine_type,
+        'plate_number' => $plate_number,
+        'body_type' => $body_type,
+        'purchase_price' => $purchase_price,
+        'selling_price' => $selling_price,
         'image_path' => $imagePath,
-        'status' => $_POST['status'] ?? 'Available',
-        'notes' => $_POST['notes'] ?? null,
+        'status' => $status,
+        'notes' => $notes
     ];
-    $data = [
-        $after['brand'],
-        $after['model'],
-        $after['year'],
-        $after['color'],
-        $after['transmission'],
-        $after['fuel_type'],
-        $after['mileage'],
-        $after['engine_type'],
-        $after['plate_number'],
-        $after['body_type'],
-        $after['purchase_price'],
-        $after['selling_price'],
-        $after['image_path'],
-        $after['status'],
-        $after['notes'],
-        $id
-    ];
-
-
-    $stmt = $pdo->prepare('UPDATE vehicles SET brand=?,
-     model=?, year=?, color=?, transmission=?
-     , fuel_type=?, mileage=?, engine_type=?, plate_number=?,
-      body_type=?, purchase_price=?, selling_price=?, image_path=?
-      , status=?, notes=? WHERE id=?');
-    $stmt->execute($data);
-    add_audit($pdo, 'Vehicle Updated', json_encode(['id'=>$id,'before'=>$v,'after'=>$after]));
-    header('Location: vehicles.php'); exit;
+    
+    add_audit_with_diff($pdo, 'Vehicle Updated', $v, $afterState, $id);
+    SheetsSync::push('vehicles');
+    header('Location: vehicles.php');
+    exit;
 }
-require 'header.php';
+require 'core/header.php';
+displayValidationErrorIfExists();
 ?>
 <div class="add-edit-vehicle-page">
   <div class="emoji-form-card">
@@ -92,6 +130,7 @@ require 'header.php';
 
     <!-- Form -->
     <form method="post" enctype="multipart/form-data" class="vehicle-form">
+      <?= getCSRFInput() ?>
       <div class="form-row">
 
         <div class="form-group">
@@ -181,4 +220,4 @@ require 'header.php';
         </form>
     </div>
 </div>
-<?php require 'footer.php'; ?>
+<?php require 'core/footer.php'; ?>

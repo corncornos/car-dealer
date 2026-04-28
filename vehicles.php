@@ -1,15 +1,29 @@
 <?php
 session_start();
-require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/core/config.php';
 if (!isset($_SESSION['user'])) header('Location: login.php');
+
+// Handle clearing session error via AJAX
+if (isset($_GET['clear_error'])) {
+    unset($_SESSION['validation_error']);
+    echo 'cleared';
+    exit();
+}
+
 $pdo = getPDO();
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['import'])) {
+    // Validate CSRF token
+    if (!isset($_POST['csrf_token']) || !validateCSRFToken($_POST['csrf_token'])) {
+        showValidationError('CSRF token validation failed. Please refresh the page and try again.');
+        exit();
+    }
 
     // 1. Check if file exists
     if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
-        die("Please select a valid CSV file.");
+        showValidationError("Please select a valid CSV file.");
+        exit();
     }
 
     // 2. Validate file type
@@ -18,19 +32,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['import'])) {
     $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
     if ($fileExtension !== 'csv') {
-        die("Only CSV files are allowed.");
+        showValidationError("Only CSV files are allowed.");
+        exit();
     }
 
     // 3. Open file safely
     if (($handle = fopen($fileTmpPath, 'r')) === false) {
-        die("Unable to open uploaded file.");
+        showValidationError("Unable to open uploaded file.");
+        exit();
     }
 
     // 4. Read header row
     $header = fgetcsv($handle);
 
     if (!$header) {
-        die("Invalid CSV format.");
+        showValidationError("Invalid CSV format.");
+        fclose($handle);
+        exit();
     }
 
     // 5. Prepare INSERT statement for vehicles table
@@ -80,7 +98,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['import'])) {
     $pdo->commit();
     fclose($handle);
 
-    echo "<script>alert('Bulk import completed successfully!'); window.location.href='vehicles.php';</script>";
+    // Log CSV import operation
+    $importData = [
+        'file_name' => $fileName,
+        'total_rows_processed' => $rowCount,
+        'import_timestamp' => date('Y-m-d H:i:s'),
+        'status' => 'Success',
+        'columns_imported' => $header
+    ];
+    add_audit($pdo, 'CSV Import Completed', json_encode($importData));
+
+    echo "<script>alert('Bulk import completed successfully! $rowCount vehicles imported.'); window.location.href='vehicles.php';</script>";
 }
 
 
@@ -138,7 +166,8 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $vehicles = $stmt->fetchAll();
 
-require 'header.php';
+require __DIR__ . '/core/header.php';
+displayValidationErrorIfExists();
 ?>
 
 
@@ -149,19 +178,19 @@ require 'header.php';
     <div>
       <h2> Vehicle Inventory</h2>
       <p>Manage and monitor all available units</p>
+      <h2>ADD CSV HERE</h2>
+      <form method="post" class="form-data" enctype="multipart/form-data">
+      <?= getCSRFInput() ?>
+      <input type="file" name="file" accept=".csv">
+      <input type="submit" name="import" value="Import">
+    </form>
     </div>
-    <a href="vehicle_add.php" class="btn-add">+ Add Vehicle</a>
-    <h2>Import CSV here</h2>
-    <form method="post" class="form-data" enctype="multipart/form-data">
-    <input type="file" name="file" accept=".csv">
-    <input type="submit" name="import" value="Import">
+    <div><a href="vehicle_add.php" class="btn-add">+ Add Vehicle</a></div>
+  </div>
     <?php
 
 ?>
     
-</form>
-
-  </div>
   
 
   <!-- Filter Card -->
@@ -273,7 +302,7 @@ require 'header.php';
 
           <td class="actions" onclick="event.stopPropagation()">
             <a href="vehicle_edit.php?id=<?php echo $v['id']; ?>" class="btn-action edit">Edit</a>
-            <a href="vehicle_delete.php?id=<?php echo $v['id']; ?>" class="btn-action delete" onclick="return confirm('Delete?')">Delete</a>
+            <a href="vehicle_delete.php?id=<?php echo $v['id']; ?>" class="btn-action delete" onclick="return confirmVehicleDelete(event, <?php echo (int)$v['id']; ?>)">Delete</a>
 
             <?php if($v['status'] !== 'Sold'): ?>
               <a href="sale_mark.php?id=<?php echo $v['id']; ?>" class="btn-action sold">Mark Sold</a>
@@ -358,7 +387,7 @@ function openModal(row) {
   const actions = document.getElementById('mActions');
   actions.innerHTML =
     '<a href="vehicle_edit.php?id=' + v.id + '" class="btn-action edit">Edit</a>' +
-    '<a href="vehicle_delete.php?id=' + v.id + '" class="btn-action delete" onclick="return confirm(\'Delete?\')">Delete</a>' +
+    '<a href="vehicle_delete.php?id=' + v.id + '" class="btn-action delete" onclick="return confirmVehicleDelete(event, ' + v.id + ')">Delete</a>' +
     (v.status !== 'Sold' ? '<a href="sale_mark.php?id=' + v.id + '" class="btn-action sold">Mark Sold</a>' : '');
 
   document.getElementById('vehicleModal').classList.add('active');
@@ -377,6 +406,70 @@ function closeModalOnOverlay(e) {
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeModal();
 });
+
+function showDeleteActionModal(options) {
+  var existing = document.getElementById('actionConfirmModal');
+  if (existing) {
+    existing.remove();
+  }
+
+  var title = options.title || 'Please Confirm';
+  var message = options.message || '';
+  var confirmText = options.confirmText || 'OK';
+  var cancelText = options.cancelText || 'Cancel';
+  var onConfirm = typeof options.onConfirm === 'function' ? options.onConfirm : function () {};
+
+  var modalHTML =
+    '<div id="actionConfirmModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:99999;">' +
+      '<div style="background:white;padding:30px;border-radius:10px;max-width:420px;width:90%;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.3);">' +
+        '<h3 style="color:#d32f2f;margin-bottom:15px;">' + title.replace(/</g, '&lt;') + '</h3>' +
+        '<p style="color:#444;margin-bottom:25px;line-height:1.5;">' + message.replace(/</g, '&lt;') + '</p>' +
+        '<div style="display:flex;gap:10px;justify-content:center;">' +
+          '<button id="actionConfirmYes" style="background:#d32f2f;color:#fff;border:none;padding:10px 20px;border-radius:5px;cursor:pointer;font-size:14px;min-width:110px;">' + confirmText + '</button>' +
+          '<button id="actionConfirmNo" style="background:#ccc;color:#333;border:none;padding:10px 20px;border-radius:5px;cursor:pointer;font-size:14px;min-width:110px;">' + cancelText + '</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+  var root = document.getElementById('actionConfirmModal');
+  var yesBtn = document.getElementById('actionConfirmYes');
+  var noBtn = document.getElementById('actionConfirmNo');
+
+  function close() {
+    if (root) {
+      root.remove();
+    }
+  }
+
+  yesBtn.addEventListener('click', function () {
+    close();
+    onConfirm();
+  });
+
+  noBtn.addEventListener('click', function () {
+    close();
+  });
+}
+
+function confirmVehicleDelete(e, id) {
+  if (e && e.preventDefault) {
+    e.preventDefault();
+  }
+
+  showDeleteActionModal({
+    title: 'Delete Vehicle',
+    message: 'Are you sure you want to delete this vehicle? This action cannot be undone.',
+    confirmText: 'Yes, Delete',
+    cancelText: 'No, Keep Vehicle',
+    onConfirm: function () {
+      window.location.href = 'vehicle_delete.php?id=' + encodeURIComponent(id);
+    }
+  });
+
+  return false;
+}
 </script>
 <!-- Pagination -->
 <?php if ($pages > 1): ?>
@@ -461,6 +554,8 @@ document.addEventListener('keydown', function(e) {
     </ul>
   </nav>
 </div>
+<link rel="stylesheet" href="assets/css/export_button.css">
+<a href="export.php?type=vehicles" class="btn-export">⬇ Export Vehicles CSV</a>
 <?php endif; ?>
 
-<?php require 'footer.php'; ?>
+<?php require __DIR__ . '/core/footer.php'; ?>

@@ -1,5 +1,5 @@
 <?php
-require_once 'config.php';
+require_once 'core/config.php';
 $pdo = getPDO();
 
 $year  = $_GET['year'] ?? date('Y');
@@ -63,13 +63,17 @@ foreach ($monthly as $row) {
 <div class="sales-wrapper">
 
     <!-- PRINT HEADER -->
+
     <div class="print-header">
-        <img src="images/logo.png" class="print-logo">
-        <div class="print-title">
+        <div>   
+     <img style="width: 200px; height: 100px;" src="images/AL7.png" class="print-logo">
+</div>
+        
+    </div>
+    <div class="print-title">
             <h2>CAR INVENTORY SALES REPORT</h2>
             <p>Date Printed: <?= date('F d, Y') ?></p>
         </div>
-    </div>
 
 <div class="charts-row">
     <div class="chart-box">
